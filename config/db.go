@@ -2,17 +2,18 @@ package config
 
 import (
 	"api-store/models"
+	"api-store/utils"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func ConnectDB() *gorm.DB {
-	user := "postgres"
-	password := "Azmi2409Revo2014"
-	host := "db.cwrfdvnvvcedqjylgvms.supabase.co"
-	port := "5432"
-	dbname := "postgres"
+	user := utils.GetEnv("DB_USERNAME", "postgres")
+	password := utils.GetEnv("DB_PASSWORD", "root")
+	host := utils.GetEnv("DB_HOST", "localhost")
+	port := utils.GetEnv("DB_PORT", "5432")
+	dbname := utils.GetEnv("DB_NAME", "postgres")
 	dsn := "host=" + host + " user=" + user + " password=" + password + " dbname=" + dbname + " port=" + port + " sslmode=require"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
