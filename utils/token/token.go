@@ -13,12 +13,23 @@ import (
 
 var API_SECRET = utils.GetEnv("API_SECRET", "supersecret")
 
-func GenerateToken(id uint) (string, error) {
+func GenerateToken(data map[string]interface{}) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
-	claims["id"] = id
-	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
-	return token.SignedString([]byte(API_SECRET))
+
+	for key, value := range data {
+		claims[key] = value
+	}
+
+	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
+
+	tokenString, err := token.SignedString([]byte(API_SECRET))
+	if err != nil {
+		return "", err
+	}
+
+	return tokenString, nil
+
 }
 
 func TokenValid(tokenString string) (uint, bool) {
@@ -39,6 +50,26 @@ func TokenValid(tokenString string) (uint, bool) {
 		return uint(uid), true
 	}
 	return 0, false
+}
+
+func SuperAdminTokenValid(tokenString string) bool {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte(API_SECRET), nil
+	})
+	if err != nil {
+		return false
+	}
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		if claims["type"] == "superAdmin" {
+			//check exp
+			exp := int64(claims["exp"].(float64))
+			return time.Now().Unix() < exp
+		}
+	}
+	return false
 }
 
 func ExtractToken(c *gin.Context) string {

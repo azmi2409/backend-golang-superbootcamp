@@ -14,9 +14,10 @@ import (
 )
 
 type AdminInput struct {
-	Name     string `json:"name" binding:"required"`
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Name       string `json:"name" binding:"required"`
+	Email      string `json:"email" binding:"required"`
+	Password   string `json:"password" binding:"required"`
+	SuperAdmin bool   `json:"superAdmin" default:"false"`
 }
 
 func Register(c *gin.Context) {
@@ -53,6 +54,7 @@ func Register(c *gin.Context) {
 	newAdmin.Name = Admin.Name
 	newAdmin.Email = &Admin.Email
 	newAdmin.Password = hashedPassword
+	newAdmin.SuperAdmin = Admin.SuperAdmin
 	newAdmin.CreatedAt = time.Now()
 	newAdmin.UpdatedAt = time.Now()
 	db.Create(&newAdmin)
@@ -89,7 +91,21 @@ func Login(c *gin.Context) {
 	}
 
 	//Generate JWT Token
-	token, err := token.GenerateToken(checkAdmin.ID)
+	var Admintype string
+
+	if checkAdmin.SuperAdmin {
+		Admintype = "superAdmin"
+	} else {
+		Admintype = "admin"
+	}
+
+	var data = map[string]interface{}{
+		"id":   checkAdmin.ID,
+		"name": checkAdmin.Name,
+		"type": Admintype,
+	}
+
+	token, err := token.GenerateToken(data)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

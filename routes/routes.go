@@ -2,6 +2,7 @@ package routes
 
 import (
 	"api-store/controller/admin"
+	"api-store/middleware/superadmin"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -30,8 +31,14 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 		c.Set("db", db)
 	})
 
-	r.POST("/admin/register", admin.Register)
 	r.POST("/admin/login", admin.Login)
+
+	adminMiddleware := r.Group("/admin")
+	adminMiddleware.Use(superadmin.CheckSuperAdmin())
+	{
+		adminMiddleware.POST("/register", admin.Register)
+	}
+
 	//r.POST("/login", controllers.Login)
 
 	r.GET("/", func(c *gin.Context) {
