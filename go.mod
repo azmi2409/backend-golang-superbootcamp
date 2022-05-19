@@ -1,6 +1,6 @@
 module api-store
 
-// +heroku goVersion go 1.18.2
+// +heroku goVersion go1.18
 
 go 1.17
 
