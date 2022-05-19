@@ -1,17 +1,25 @@
 package config
 
 import (
-	"beeleaf-store/utils"
+	"api-store/models"
 
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func ConnectDB() *gorm.DB {
-	dsn := utils.Getenv("DSN", "root:root@tcp(localhost)/gorm?charset=utf8mb4&parseTime=True&loc=Local")
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	user := "postgres"
+	password := "Azmi2409Revo2014"
+	host := "db.cwrfdvnvvcedqjylgvms.supabase.co"
+	port := "5432"
+	dbname := "postgres"
+	dsn := "host=" + host + " user=" + user + " password=" + password + " dbname=" + dbname + " port=" + port + " sslmode=require"
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err.Error())
 	}
+
+	db.AutoMigrate(&models.User{})
+
 	return db
 }

@@ -1,7 +1,20 @@
 package main
 
-import "fmt"
+import (
+	"api-store/config"
+	"fmt"
+)
 
 func main() {
-	fmt.Println("Hello, World!")
+	//programmatically set swagger info
+
+	db := config.ConnectDB()
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
+	//check db connection
+	if db.Error != nil {
+		panic(db.Error)
+	}
+	//check db tables
+	fmt.Printf("Db Connection Successful\n")
 }
