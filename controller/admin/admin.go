@@ -1,30 +1,29 @@
 package admin
 
 import (
-	"io/ioutil"
-	"net/http"
-	"time"
-
+	"api-store/middleware/superadmin"
 	"api-store/models"
-
 	"api-store/utils"
 	"api-store/utils/storage"
 	"api-store/utils/token"
+	"io/ioutil"
+	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 type AdminInput struct {
-	Name       string `json:"name" binding:"required"`
+	Name       string `json:"name"`
 	Email      string `json:"email" binding:"required"`
 	Password   string `json:"password" binding:"required"`
 	SuperAdmin bool   `json:"superAdmin" default:"false"`
 }
 
 type ImageInput struct {
-	Image []byte `form:"image" binding:"required"`
-	Name  string `form:"name" binding:"required"`
+	Image []byte `json:"image"`
+	Name  string `json:"name"`
 }
 
 func Register(c *gin.Context) {
@@ -149,4 +148,33 @@ func UploadImage(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"path": path})
 
+}
+
+func UploadImageBase64(c *gin.Context) {
+	var Image ImageInput
+	if err := c.ShouldBindJSON(&Image); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	//Save Image to Storage
+
+	path, err := storage.UploadBase64(Image.Image, Image.Name)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"path": path})
+
+}
+
+func AdminRoutes(r *gin.RouterGroup) {
+	r.POST("/login", Login)
+
+	//Use Auth
+	r.Use(superadmin.CheckSuperAdmin())
+	r.POST("/register", Register)
+	r.POST("/upload", UploadImage)
+	r.POST("/upload-base", UploadImageBase64)
 }

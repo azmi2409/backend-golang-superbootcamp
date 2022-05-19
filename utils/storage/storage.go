@@ -37,3 +37,18 @@ func UploadFiles(file []byte, fileName string) (string, error) {
 
 	return filePath, nil
 }
+
+func UploadBase64(file []byte, name string) (string, error) {
+	url := utils.GetEnv("STORAGE_URL", "http://localhost:9000")
+	key := utils.GetEnv("STORAGE_TOKEN", "")
+
+	client := storage_go.NewClient(url, key, nil)
+	client.CreateBucket("api-store", storage_go.BucketOptions{})
+
+	filePath := "api-store/" + name
+	err := client.UploadFile("users", filePath, bytes.NewReader(file))
+
+	fmt.Println("File uploaded", err)
+
+	return filePath, nil
+}

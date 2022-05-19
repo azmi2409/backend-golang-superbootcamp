@@ -2,7 +2,6 @@ package routes
 
 import (
 	"api-store/controller/admin"
-	"api-store/middleware/superadmin"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -31,22 +30,12 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 		c.Set("db", db)
 	})
 
-	r.POST("/admin/login", admin.Login)
+	//Api Main Route
+	api := r.Group("/api/v1")
 
-	adminMiddleware := r.Group("/admin")
-	adminMiddleware.Use(superadmin.CheckSuperAdmin())
-	{
-		adminMiddleware.POST("/register", admin.Register)
-		adminMiddleware.POST("/upload", admin.UploadImage)
-	}
-
-	//r.POST("/login", controllers.Login)
-
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "Welcome to the API Store",
-		})
-	})
+	//Admin Routes
+	adminRoutes := api.Group("/admin")
+	admin.AdminRoutes(adminRoutes)
 
 	return r
 }
