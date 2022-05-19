@@ -2,6 +2,7 @@ package main
 
 import (
 	"api-store/config"
+	"api-store/routes"
 	"fmt"
 
 	"github.com/joho/godotenv"
@@ -25,4 +26,7 @@ func main() {
 
 	//check db tables
 	fmt.Printf("Db Connection Successful\n")
+
+	r := routes.SetupRouter(db)
+	r.Run(":8080")
 }
