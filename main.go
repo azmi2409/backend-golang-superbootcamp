@@ -4,17 +4,15 @@ import (
 	"api-store/config"
 	"api-store/routes"
 	"fmt"
-
-	"github.com/joho/godotenv"
 )
 
 func main() {
 	//programmatically set swagger info
 
-	err := godotenv.Load()
-	if err != nil {
-		fmt.Println(err)
-	}
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 
 	db := config.ConnectDB()
 	sqlDB, _ := db.DB()
