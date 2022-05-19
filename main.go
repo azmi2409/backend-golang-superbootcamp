@@ -34,6 +34,8 @@ func main() {
 	//check db tables
 	fmt.Printf("Db Connection Successful\n")
 
+	port := utils.GetEnv("PORT", "8080")
+
 	r := routes.SetupRouter(db)
-	r.Run(":8080")
+	r.Run(":" + port)
 }
