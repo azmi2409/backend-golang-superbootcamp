@@ -15,6 +15,5 @@ type User struct {
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
 
-	Cart          []Cart       `json:"-"`
-	Order_Details Order_Detail `json:"-"`
+	Cart []Cart `json:"-"`
 }
