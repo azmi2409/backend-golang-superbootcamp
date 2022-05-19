@@ -24,6 +24,9 @@ func main() {
 		panic(db.Error)
 	}
 
+	//setup storage
+	//storage.SetupStorage()
+
 	//check db tables
 	fmt.Printf("Db Connection Successful\n")
 

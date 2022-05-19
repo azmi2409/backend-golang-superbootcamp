@@ -1,12 +1,14 @@
 package admin
 
 import (
+	"io/ioutil"
 	"net/http"
 	"time"
 
 	"api-store/models"
 
 	"api-store/utils"
+	"api-store/utils/storage"
 	"api-store/utils/token"
 
 	"github.com/gin-gonic/gin"
@@ -18,6 +20,11 @@ type AdminInput struct {
 	Email      string `json:"email" binding:"required"`
 	Password   string `json:"password" binding:"required"`
 	SuperAdmin bool   `json:"superAdmin" default:"false"`
+}
+
+type ImageInput struct {
+	Image []byte `form:"image" binding:"required"`
+	Name  string `form:"name" binding:"required"`
 }
 
 func Register(c *gin.Context) {
@@ -112,4 +119,34 @@ func Login(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"token": token})
+}
+
+func UploadImage(c *gin.Context) {
+	file, header, err := c.Request.FormFile("image")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	fileName := header.Filename
+
+	img, _ := ioutil.ReadAll(file)
+
+	// fmt.Println(string(img))
+	if !utils.CheckImageExtension(fileName) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Image extension is not valid"})
+		return
+	}
+
+	//Get Image Extension
+
+	//Save Image to Storage
+	path, err := storage.UploadFiles(img, fileName)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"path": path})
+
 }

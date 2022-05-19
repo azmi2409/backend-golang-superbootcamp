@@ -3,6 +3,7 @@ package utils
 import (
 	"net/mail"
 	"os"
+	"path/filepath"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -32,4 +33,15 @@ func ValidateEmail(email string) bool {
 func CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+func CheckImageExtension(fileName string) bool {
+	arrayOfExt := []string{"jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "ico", "tiff", "tif"}
+	ext := filepath.Ext(fileName)
+	for _, v := range arrayOfExt {
+		if ext == "."+v {
+			return true
+		}
+	}
+	return false
 }

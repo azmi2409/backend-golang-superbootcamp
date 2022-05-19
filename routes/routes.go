@@ -37,6 +37,7 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	adminMiddleware.Use(superadmin.CheckSuperAdmin())
 	{
 		adminMiddleware.POST("/register", admin.Register)
+		adminMiddleware.POST("/upload", admin.UploadImage)
 	}
 
 	//r.POST("/login", controllers.Login)
