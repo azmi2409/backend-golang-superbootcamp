@@ -14,6 +14,4 @@ type User struct {
 	Birthday  *time.Time `json:"birthday"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
-
-	Cart []Cart `json:"-"`
 }

@@ -22,7 +22,7 @@ type AdminInput struct {
 }
 
 type ImageInput struct {
-	Image []byte `json:"image"`
+	Image []byte `json:"image" binding:"required"`
 	Name  string `json:"name"`
 }
 

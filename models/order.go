@@ -9,7 +9,4 @@ type Order struct {
 	PaymentID uint      `json:"payment_id"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
-
-	User  User        `json:"-"`
-	Items []OrderItem `json:"-"`
 }

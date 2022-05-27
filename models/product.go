@@ -11,7 +11,4 @@ type Product struct {
 	CategoryID  uint      `json:"category_id"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
-
-	Cart     Cart       `json:"-"`
-	Category []Category `json:"-"`
 }

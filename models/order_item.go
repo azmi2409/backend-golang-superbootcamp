@@ -9,7 +9,4 @@ type OrderItem struct {
 	Quantity  uint      `json:"quantity"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
-
-	Product Product `json:"-"`
-	Order   Order   `json:"-"`
 }
