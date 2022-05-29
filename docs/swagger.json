@@ -1,7 +1,56 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "This is a simple E-Commerce API",
+        "title": "FinalProject GO API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Azmi",
+            "url": "https://www.azmi.web.id",
+            "email": "me@azmi.web.id"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "0.1"
     },
-    "paths": {}
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
+    "paths": {
+        "/user/register": {
+            "post": {
+                "description": "Register User",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Register User",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Account ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User registered successfully"
+                    }
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BearerToken": {
+            "type": "basic"
+        }
+    }
 }

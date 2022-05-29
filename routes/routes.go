@@ -2,12 +2,13 @@ package routes
 
 import (
 	"api-store/controller/admin"
+	"api-store/controller/user"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"     // swagger embed files
+	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
 	"gorm.io/gorm"
-	// swagger embed files
-	// gin-swagger middleware
 )
 
 func SetupRouter(db *gorm.DB) *gin.Engine {
@@ -30,17 +31,20 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 		c.Set("db", db)
 	})
 
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	//Api Main Route
 	api := r.Group("/api/v1")
 
 	//Admin Routes
 	adminRoutes := api.Group("/admin")
-	//	userRoutes := api.Group("/user")
+	userRoutes := api.Group("/user")
 	//	productRoutes := api.Group("/product")
 	//	orderRoutes := api.Group("/order")
 	//	checkoutRoutes := api.Group("/checkout")
 
 	admin.AdminRoutes(adminRoutes)
+	user.UserRoutes(userRoutes)
 
 	return r
 }
