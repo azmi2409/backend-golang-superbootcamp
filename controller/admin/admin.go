@@ -117,7 +117,14 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	var output = map[string]interface{}{
+		"id":    checkAdmin.ID,
+		"name":  checkAdmin.Name,
+		"type":  Admintype,
+		"token": token,
+	}
+
+	c.JSON(http.StatusOK, output)
 }
 
 func UploadImage(c *gin.Context) {
