@@ -15,6 +15,7 @@ type ProductInput struct {
 	Price       float64 `json:"price" binding:"required"`
 	SKU         string  `json:"sku" binding:"required"`
 	Category    string  `json:"category" binding:"required"`
+	ImageURL    string  `json:"image_url"`
 }
 
 func AddProduct(c *gin.Context) {
@@ -49,6 +50,14 @@ func AddProduct(c *gin.Context) {
 	}
 
 	db.Create(&product)
+	//Insert Picture
+	if Product.ImageURL != "" {
+		db.Create(&models.ProductImage{
+			ProductID: product.ID,
+			ImageURL:  Product.ImageURL,
+		})
+	}
+
 	c.JSON(http.StatusOK, models.NewHttpSuccess("Product added successfully"))
 
 }
