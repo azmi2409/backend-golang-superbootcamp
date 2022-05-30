@@ -91,7 +91,7 @@ func UpdateProduct(c *gin.Context) {
 func GetAllProducts(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	var products []models.Product
-	db.Joins("Category").Find(&products)
+	db.Joins("ProductImage").Joins("Category").Find(&products)
 	c.JSON(http.StatusOK, products)
 }
 
