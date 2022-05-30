@@ -172,7 +172,7 @@ func UploadImageBase64(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"path": path})
+	c.JSON(http.StatusOK, path)
 
 }
 
@@ -182,7 +182,6 @@ func AdminRoutes(r *gin.RouterGroup) {
 	//Use Auth
 	r.Use(superadmin.CheckSuperAdmin())
 	r.POST("/register", Register)
-	r.POST("/upload", UploadImage)
-	r.POST("/upload-base", UploadImageBase64)
+	r.POST("/upload", UploadImageBase64)
 
 }
