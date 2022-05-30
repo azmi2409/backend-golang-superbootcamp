@@ -15,7 +15,6 @@ type ProductInput struct {
 	Price       float64 `json:"price" binding:"required"`
 	SKU         string  `json:"sku" binding:"required"`
 	Category    string  `json:"category" binding:"required"`
-	Slug        string  `json:"slug" binding:"required"`
 }
 
 func AddProduct(c *gin.Context) {
