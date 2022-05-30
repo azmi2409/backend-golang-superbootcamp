@@ -1,6 +1,7 @@
 package user
 
 import (
+	"api-store/middleware"
 	"api-store/models"
 	"api-store/utils"
 	"api-store/utils/token"
@@ -74,6 +75,13 @@ func Register(c *gin.Context) {
 	newUser.CreatedAt = time.Now()
 	newUser.UpdatedAt = time.Now()
 	db.Create(&newUser)
+
+	//Create Cart
+	var newCart models.Cart
+	newCart.UserID = newUser.ID
+	newCart.CreatedAt = time.Now()
+
+	db.Create(&newCart)
 
 	c.JSON(http.StatusOK, models.NewHttpSuccess("User registered successfully"))
 }
@@ -149,11 +157,15 @@ func GetUserDetailsByToken(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "User Details", "data": User})
+	User.Password = "hidden"
+
+	c.JSON(http.StatusOK, User)
 }
 
 func UserRoutes(r *gin.RouterGroup) {
 	r.POST("/register", Register)
 	r.POST("/login", Login)
+
+	r.GET("/", middleware.CheckToken, GetUserDetailsByToken)
 
 }

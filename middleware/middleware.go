@@ -17,10 +17,7 @@ func CheckToken(c *gin.Context) {
 		return
 	}
 	id := token.ParseTokenID(tokenString)
-	if id == 0 {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
-		c.Abort()
-	} else {
+	if id != 0 {
 		//verify id
 		db := c.MustGet("db").(*gorm.DB)
 		var user models.User
@@ -30,7 +27,7 @@ func CheckToken(c *gin.Context) {
 			c.Abort()
 		}
 		c.Next()
-
+		return
 	}
 
 	c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})

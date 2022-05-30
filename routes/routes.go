@@ -2,6 +2,7 @@ package routes
 
 import (
 	"api-store/controller/admin"
+	"api-store/controller/cart"
 	"api-store/controller/product"
 	"api-store/controller/user"
 
@@ -41,12 +42,14 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	adminRoutes := api.Group("/admin")
 	userRoutes := api.Group("/user")
 	productRoutes := api.Group("/product")
+	cartRoutes := api.Group("/cart")
 	//	orderRoutes := api.Group("/order")
 	//	checkoutRoutes := api.Group("/checkout")
 
 	admin.AdminRoutes(adminRoutes)
 	user.UserRoutes(userRoutes)
 	product.ProductRoutes(productRoutes)
+	cart.CartRoutes(cartRoutes)
 
 	return r
 }
