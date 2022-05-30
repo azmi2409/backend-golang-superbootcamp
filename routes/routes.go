@@ -17,14 +17,14 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	r := gin.Default()
 
 	corsConfig := cors.DefaultConfig()
-	// corsConfig.AllowAllOrigins = true
-	// corsConfig.AllowHeaders = []string{"Content-Type", "X-XSRF-TOKEN", "Accept", "Origin", "X-Requested-With", "Authorization"}
+	corsConfig.AllowAllOrigins = true
+	corsConfig.AllowHeaders = []string{"Content-Type", "X-XSRF-TOKEN", "Accept", "Origin", "X-Requested-With", "Authorization"}
 
-	// // To be able to send tokens to the server.
-	// corsConfig.AllowCredentials = true
+	// To be able to send tokens to the server.
+	corsConfig.AllowCredentials = true
 
-	// // OPTIONS method for ReactJS
-	// corsConfig.AddAllowMethods("OPTIONS")
+	// OPTIONS method for ReactJS
+	corsConfig.AddAllowMethods("OPTIONS")
 
 	r.Use(cors.New(corsConfig))
 
