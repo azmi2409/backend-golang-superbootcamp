@@ -26,7 +26,15 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	// OPTIONS method for ReactJS
 	corsConfig.AddAllowMethods("OPTIONS")
 
-	r.Use(cors.New(corsConfig))
+	config := cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	})
+
+	r.Use(config)
 
 	// set db to gin context
 	r.Use(func(c *gin.Context) {
