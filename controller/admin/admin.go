@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"api-store/controller/product"
 	"api-store/middleware/superadmin"
 	"api-store/models"
 	"api-store/utils"
@@ -184,4 +185,13 @@ func AdminRoutes(r *gin.RouterGroup) {
 	r.POST("/register", Register)
 	r.POST("/upload", UploadImage)
 	r.POST("/upload-base", UploadImageBase64)
+
+	prod := r.Group("/product")
+	{
+		prod.GET("/", product.GetAllProducts)
+		prod.GET("/:id", product.GetProductByID)
+		prod.POST("/", product.AddProduct)
+		prod.PUT("/:id", product.UpdateProduct)
+		prod.DELETE("/:id", product.DeleteProductByID)
+	}
 }
