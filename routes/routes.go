@@ -42,6 +42,8 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 
 	//Admin Routes
 	adminRoutes := api.Group("/admin")
+	admProduct := adminRoutes.Group("/product")
+
 	userRoutes := api.Group("/user")
 	productRoutes := api.Group("/product")
 	cartRoutes := api.Group("/cart")
@@ -49,6 +51,8 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	//	checkoutRoutes := api.Group("/checkout")
 
 	admin.AdminRoutes(adminRoutes)
+	product.ProductRoutes(admProduct)
+
 	user.UserRoutes(userRoutes)
 	product.ProductRoutes(productRoutes)
 	cart.CartRoutes(cartRoutes)
