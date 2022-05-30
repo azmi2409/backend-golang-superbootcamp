@@ -10,6 +10,5 @@ type OrderItem struct {
 	ProductID uint `json:"product_id"`
 	Quantity  uint `json:"quantity"`
 
-	Order   Order   `gorm:"foreignkey:OrderID"`
 	Product Product `gorm:"foreignkey:ProductID"`
 }

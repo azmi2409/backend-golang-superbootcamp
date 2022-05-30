@@ -32,7 +32,7 @@ func GenerateToken(data map[string]interface{}) (string, error) {
 
 }
 
-func TokenValid(tokenString string) (uint, bool) {
+func ParseTokenID(tokenString string) uint {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -40,16 +40,26 @@ func TokenValid(tokenString string) (uint, bool) {
 		return []byte(API_SECRET), nil
 	})
 	if err != nil {
-		return 0, false
+		return 0
 	}
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		//Check exp
+		if claims["exp"] == nil {
+			return 0
+		}
+		if int64(claims["exp"].(float64)) < time.Now().Unix() {
+			return 0
+		}
+		if claims["id"] == nil {
+			return 0
+		}
 		uid, err := strconv.ParseUint(fmt.Sprintf("%.0f", claims["id"]), 10, 32)
 		if err != nil {
-			return 0, false
+			return 0
 		}
-		return uint(uid), true
+		return uint(uid)
 	}
-	return 0, false
+	return 0
 }
 
 func SuperAdminTokenValid(tokenString string) bool {
@@ -78,13 +88,4 @@ func ExtractToken(c *gin.Context) string {
 		return ""
 	}
 	return strings.Replace(token, "Bearer ", "", -1)
-}
-
-func ExtractTokenID(c *gin.Context) uint {
-	token := ExtractToken(c)
-	if len(token) == 0 {
-		return 0
-	}
-	uid, _ := TokenValid(token)
-	return uid
 }

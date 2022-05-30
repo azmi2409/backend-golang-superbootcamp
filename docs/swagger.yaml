@@ -1,4 +1,17 @@
 basePath: /api/v1
+definitions:
+  models.HttpError:
+    properties:
+      message:
+        default: Some Error Occurred
+        type: string
+    type: object
+  models.HttpSuccess:
+    properties:
+      message:
+        default: Success
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -28,7 +41,21 @@ paths:
       - application/json
       responses:
         "200":
-          description: User registered successfully
+          description: OK
+          schema:
+            $ref: '#/definitions/models.HttpSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HttpError'
       summary: Register User
       tags:
       - User

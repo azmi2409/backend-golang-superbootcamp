@@ -23,20 +23,23 @@ type UserInput struct {
 // @Accept       json
 // @Produce      json
 // @Param        id   path      int  true  "Account ID"
-// @Success      200  "User registered successfully"
+// @Success      200  {object} models.HttpSuccess
+// @Failure      400  {object} models.HttpError
+// @Failure      404  {object} models.HttpError
+// @Failure      500  {object} models.HttpError
 // @Router       /user/register [post]
 func Register(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	var User models.User
 	if err := c.ShouldBindJSON(&User); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, models.NewHttpError(err.Error()))
 		return
 	}
 
 	//Check If Email Valid
 	email := User.Email
 	if !utils.ValidateEmail(*email) {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Email is not valid"})
+		c.JSON(http.StatusBadRequest, models.NewHttpError("Email is not valid"))
 		return
 	}
 
@@ -44,14 +47,15 @@ func Register(c *gin.Context) {
 	var checkUser models.User
 	db.Where("email = ?", User.Email).First(&checkUser)
 	if checkUser.ID != 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Email already registered"})
+		message := models.NewHttpError("Email already registered")
+		c.JSON(http.StatusBadRequest, message)
 		return
 	}
 
 	//Hash Password
 	hashedPassword, err := utils.Encrypt(User.Password)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, models.NewHttpError(err.Error()))
 		return
 	}
 
@@ -71,14 +75,26 @@ func Register(c *gin.Context) {
 	newUser.UpdatedAt = time.Now()
 	db.Create(&newUser)
 
-	c.JSON(http.StatusOK, gin.H{"message": "User registered successfully"})
+	c.JSON(http.StatusOK, models.NewHttpSuccess("User registered successfully"))
 }
 
+// ShowAccount godoc
+// @Summary      Login User
+// @Description  Login User
+// @Tags         User
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "Account ID"
+// @Success      200  {object} models.HttpSuccess
+// @Failure      400  {object} models.HttpError
+// @Failure      404  {object} models.HttpError
+// @Failure      500  {object} models.HttpError
+// @Router       /user/register [post]
 func Login(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	var UserInput UserInput
 	if err := c.ShouldBindJSON(&UserInput); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, models.NewHttpError(err.Error()))
 		return
 	}
 
@@ -86,13 +102,13 @@ func Login(c *gin.Context) {
 	var checkUser models.User
 	db.Where("email = ?", UserInput.Email).First(&checkUser)
 	if checkUser.ID == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Email not registered"})
+		c.JSON(http.StatusBadRequest, models.NewHttpError("Email not registered"))
 		return
 	}
 
 	//Check if Password is Correct
 	if !utils.CheckPasswordHash(UserInput.Password, checkUser.Password) {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Password is not correct"})
+		c.JSON(http.StatusBadRequest, models.NewHttpError("Password is not correct"))
 		return
 	}
 
@@ -106,11 +122,34 @@ func Login(c *gin.Context) {
 	token, err := token.GenerateToken(UserData)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, models.NewHttpError(err.Error()))
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Login Successfully", "token": token})
+}
+
+func GetUserDetailsByToken(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	tokenString := token.ExtractToken(c)
+
+	//Check if Token is Valid
+	id := token.ParseTokenID(tokenString)
+	if id == 0 {
+		c.JSON(http.StatusBadRequest, models.NewHttpError("Token is not valid"))
+		return
+	}
+
+	//Get User Details
+	var User models.User
+	db.First(&User, id)
+
+	if User.ID == 0 {
+		c.JSON(http.StatusBadRequest, models.NewHttpError("User not found"))
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "User Details", "data": User})
 }
 
 func UserRoutes(r *gin.RouterGroup) {

@@ -31,7 +31,7 @@ func main() {
 	//programmatically set swagger info
 	docs.SwaggerInfo.Title = "FinalProject GO API"
 	docs.SwaggerInfo.Description = "Simple E-Commerce API"
-	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Version = "0.1"
 	docs.SwaggerInfo.Host = "localhost:8080"
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
@@ -51,9 +51,6 @@ func main() {
 	if db.Error != nil {
 		panic(db.Error)
 	}
-
-	//setup storage
-	//storage.SetupStorage()
 
 	//check db tables
 	fmt.Printf("Db Connection Successful\n")

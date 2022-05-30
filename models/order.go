@@ -10,5 +10,6 @@ type Order struct {
 	Total     float64 `json:"total"`
 	PaymentID uint    `json:"payment_id"`
 
-	User User `gorm:"foreignkey:UserID"`
+	User      User        `gorm:"foreignkey:UserID"`
+	OrderItem []OrderItem `gorm:"foreignkey:OrderID"`
 }

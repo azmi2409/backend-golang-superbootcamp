@@ -2,6 +2,7 @@ package routes
 
 import (
 	"api-store/controller/admin"
+	"api-store/controller/product"
 	"api-store/controller/user"
 
 	"github.com/gin-contrib/cors"
@@ -39,12 +40,13 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	//Admin Routes
 	adminRoutes := api.Group("/admin")
 	userRoutes := api.Group("/user")
-	//	productRoutes := api.Group("/product")
+	productRoutes := api.Group("/product")
 	//	orderRoutes := api.Group("/order")
 	//	checkoutRoutes := api.Group("/checkout")
 
 	admin.AdminRoutes(adminRoutes)
 	user.UserRoutes(userRoutes)
+	product.ProductRoutes(productRoutes)
 
 	return r
 }
