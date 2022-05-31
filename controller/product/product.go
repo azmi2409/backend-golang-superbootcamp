@@ -18,6 +18,18 @@ type ProductInput struct {
 	ImageURL    string  `json:"image_url"`
 }
 
+// ShowAccount godoc
+// @Summary      Add Product
+// @Description  Add Product
+// @Tags         Product
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "Account ID"
+// @Success      200  {object} models.HttpSuccess
+// @Failure      400  {object} models.HttpError
+// @Failure      404  {object} models.HttpError
+// @Failure      500  {object} models.HttpError
+// @Router       /product/ [post]
 func AddProduct(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	var Product ProductInput
@@ -62,6 +74,18 @@ func AddProduct(c *gin.Context) {
 
 }
 
+// ShowAccount godoc
+// @Summary      Update Product
+// @Description  Update Product
+// @Tags         Product
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "Account ID"
+// @Success      200  {object} models.HttpSuccess
+// @Failure      400  {object} models.HttpError
+// @Failure      404  {object} models.HttpError
+// @Failure      500  {object} models.HttpError
+// @Router       /product/:id [put]
 func UpdateProduct(c *gin.Context) {
 	//get ID params
 	id := c.Param("id")
@@ -88,6 +112,17 @@ func UpdateProduct(c *gin.Context) {
 	c.JSON(http.StatusOK, models.NewHttpSuccess("Product updated successfully"))
 }
 
+// ShowAccount godoc
+// @Summary      Get All Product
+// @Description  Get All Product
+// @Tags         Product
+// @Produce      json
+// @Param        id   path      int  true  "Account ID"
+// @Success      200  {object} models.HttpSuccess
+// @Failure      400  {object} models.HttpError
+// @Failure      404  {object} models.HttpError
+// @Failure      500  {object} models.HttpError
+// @Router       /product [get]
 func GetAllProducts(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	var products []models.Product
@@ -101,6 +136,17 @@ func GetAllProducts(c *gin.Context) {
 	c.JSON(http.StatusOK, products)
 }
 
+// ShowAccount godoc
+// @Summary      Get All Product By Category
+// @Description  Get All Product By Category
+// @Tags         Product
+// @Produce      json
+// @Param        id   path      int  true  "Account ID"
+// @Success      200  {object} models.HttpSuccess
+// @Failure      400  {object} models.HttpError
+// @Failure      404  {object} models.HttpError
+// @Failure      500  {object} models.HttpError
+// @Router       /product/categories/:id [get]
 func GetProductsByCategory(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	category := c.Param("category")
@@ -117,6 +163,17 @@ func GetProductsByCategory(c *gin.Context) {
 	c.JSON(http.StatusOK, products)
 }
 
+// ShowAccount godoc
+// @Summary      Get All Product By ID
+// @Description  Get All Product By ID
+// @Tags         Product
+// @Produce      json
+// @Param        id   path      int  true  "Account ID"
+// @Success      200  {object} models.HttpSuccess
+// @Failure      400  {object} models.HttpError
+// @Failure      404  {object} models.HttpError
+// @Failure      500  {object} models.HttpError
+// @Router       /product/:id [get]
 func GetProductByID(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
@@ -129,6 +186,17 @@ func GetProductByID(c *gin.Context) {
 	c.JSON(http.StatusOK, product)
 }
 
+// ShowAccount godoc
+// @Summary      Get Delete Product
+// @Description  Get Delete Product
+// @Tags         Product
+// @Produce      json
+// @Param        id   path      int  true  "Account ID"
+// @Success      200  {object} models.HttpSuccess
+// @Failure      400  {object} models.HttpError
+// @Failure      404  {object} models.HttpError
+// @Failure      500  {object} models.HttpError
+// @Router       /product/:id [delete]
 func DeleteProductByID(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
@@ -136,6 +204,17 @@ func DeleteProductByID(c *gin.Context) {
 	c.JSON(http.StatusOK, models.NewHttpSuccess("Product deleted successfully"))
 }
 
+// ShowAccount godoc
+// @Summary      Search Product
+// @Description  Search Product
+// @Tags         Product
+// @Produce      json
+// @Param        id   path      int  true  "Account ID"
+// @Success      200  {object} models.HttpSuccess
+// @Failure      400  {object} models.HttpError
+// @Failure      404  {object} models.HttpError
+// @Failure      500  {object} models.HttpError
+// @Router       /product/search/ [get]
 func SearchProduct(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	query := c.Param("query")

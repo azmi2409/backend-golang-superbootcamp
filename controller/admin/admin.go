@@ -26,6 +26,10 @@ type ImageInput struct {
 	Name  string `json:"name"`
 }
 
+type DeleteImageInput struct {
+	Name string `json:"name"`
+}
+
 func Register(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	var Admin AdminInput
@@ -176,6 +180,23 @@ func UploadImageBase64(c *gin.Context) {
 
 }
 
+func DeleteImage(c *gin.Context) {
+	var Image DeleteImageInput
+	if err := c.ShouldBindJSON(&Image); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var listImage []string
+	listImage = append(listImage, Image.Name)
+
+	//Delete Image from Storage
+	err, _ := storage.DeleteFile(listImage)
+
+	c.JSON(http.StatusOK, err)
+
+}
+
 func AdminRoutes(r *gin.RouterGroup) {
 	r.POST("/login", Login)
 
@@ -183,5 +204,6 @@ func AdminRoutes(r *gin.RouterGroup) {
 	r.Use(superadmin.CheckSuperAdmin())
 	r.POST("/register", Register)
 	r.POST("/upload", UploadImageBase64)
+	r.POST("/delete", DeleteImage)
 
 }

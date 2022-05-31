@@ -54,3 +54,17 @@ func UploadBase64(file []byte, name string) (storage_go.FileUploadResponse, erro
 
 	return err, nil
 }
+
+func DeleteFile(fileName []string) (storage_go.FileUploadResponse, error) {
+	url := utils.GetEnv("STORAGE_URL", "http://localhost:9000")
+	key := utils.GetEnv("STORAGE_TOKEN", "")
+
+	client := storage_go.NewClient(url, key, nil)
+	client.CreateBucket("api-store", storage_go.BucketOptions{})
+
+	err := client.RemoveFile("users", fileName)
+
+	fmt.Println("File deleted", err)
+
+	return err, nil
+}

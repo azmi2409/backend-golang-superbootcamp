@@ -97,7 +97,7 @@ func Register(c *gin.Context) {
 // @Failure      400  {object} models.HttpError
 // @Failure      404  {object} models.HttpError
 // @Failure      500  {object} models.HttpError
-// @Router       /user/register [post]
+// @Router       /user/login [post]
 func Login(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	var UserInput UserInput
@@ -137,6 +137,18 @@ func Login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Login Successfully", "token": token})
 }
 
+// ShowAccount godoc
+// @Summary      Register User
+// @Description  Register User
+// @Tags         User
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "Account ID"
+// @Success      200  {object} models.HttpSuccess
+// @Failure      400  {object} models.HttpError
+// @Failure      404  {object} models.HttpError
+// @Failure      500  {object} models.HttpError
+// @Router       /user/ [get]
 func GetUserDetailsByToken(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	tokenString := token.ExtractToken(c)

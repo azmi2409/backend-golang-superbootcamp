@@ -26,6 +26,291 @@ info:
   title: FinalProject GO API
   version: "0.1"
 paths:
+  /product:
+    get:
+      description: Get All Product
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.HttpSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HttpError'
+      summary: Get All Product
+      tags:
+      - Product
+  /product/:
+    post:
+      consumes:
+      - application/json
+      description: Add Product
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.HttpSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HttpError'
+      summary: Add Product
+      tags:
+      - Product
+  /product/:id:
+    delete:
+      description: Get Delete Product
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.HttpSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HttpError'
+      summary: Get Delete Product
+      tags:
+      - Product
+    get:
+      description: Get All Product By ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.HttpSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HttpError'
+      summary: Get All Product By ID
+      tags:
+      - Product
+    put:
+      consumes:
+      - application/json
+      description: Update Product
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.HttpSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HttpError'
+      summary: Update Product
+      tags:
+      - Product
+  /product/categories/:id:
+    get:
+      description: Get All Product By Category
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.HttpSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HttpError'
+      summary: Get All Product By Category
+      tags:
+      - Product
+  /product/search/:
+    get:
+      description: Search Product
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.HttpSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HttpError'
+      summary: Search Product
+      tags:
+      - Product
+  /user/:
+    get:
+      consumes:
+      - application/json
+      description: Register User
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.HttpSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HttpError'
+      summary: Register User
+      tags:
+      - User
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: Login User
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.HttpSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HttpError'
+      summary: Login User
+      tags:
+      - User
   /user/register:
     post:
       consumes:
