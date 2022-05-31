@@ -32,7 +32,7 @@ func main() {
 	docs.SwaggerInfo.Title = "FinalProject GO API"
 	docs.SwaggerInfo.Description = "Simple E-Commerce API"
 	docs.SwaggerInfo.Version = "0.1"
-	docs.SwaggerInfo.Host = "localhost:8080"
+	docs.SwaggerInfo.Host = "http://backend-final-beeleaf.herokuapp.com"
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
