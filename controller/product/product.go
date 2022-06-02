@@ -153,13 +153,12 @@ func GetProductsByCategory(c *gin.Context) {
 
 	//get Category ID
 	var categoryModel models.Category
-	db.Where("name = ?", category).First(&categoryModel)
+	db.Joins("Product").Joins("Category").Where("name = ?", category).First(&categoryModel)
 	if categoryModel.ID == 0 {
 		c.JSON(http.StatusBadRequest, models.NewHttpError("Category not found"))
 		return
 	}
-	var products []models.Product
-	db.Joins("Category").Where("category_id = ?", categoryModel.ID).Find(&products)
+	products := categoryModel.Products
 	c.JSON(http.StatusOK, products)
 }
 
@@ -183,6 +182,10 @@ func GetProductByID(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, models.NewHttpError("Product not found"))
 		return
 	}
+	var images []models.ProductImage
+	db.Find(&images, "product_id = ?", product.ID)
+	product.ProductImages = images
+
 	c.JSON(http.StatusOK, product)
 }
 
