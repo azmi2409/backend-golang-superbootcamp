@@ -9,5 +9,5 @@ type Category struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 
-	Products []Product `gorm:"foreignkey:CategoryID"`
+	Product []Product `gorm:"foreignkey:CategoryID"`
 }

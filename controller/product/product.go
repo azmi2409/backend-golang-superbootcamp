@@ -10,12 +10,12 @@ import (
 )
 
 type ProductInput struct {
-	Name        string  `json:"name" binding:"required"`
-	Description string  `json:"description" binding:"required"`
-	Price       float64 `json:"price" binding:"required"`
-	SKU         string  `json:"sku" binding:"required"`
-	Category    string  `json:"category" binding:"required"`
-	ImageURL    string  `json:"image_url"`
+	Name        string   `json:"name" binding:"required"`
+	Description string   `json:"description" binding:"required"`
+	Price       float64  `json:"price" binding:"required"`
+	SKU         string   `json:"sku" binding:"required"`
+	Category    string   `json:"category" binding:"required"`
+	ImageURL    []string `json:"image_url"`
 }
 
 // ShowAccount godoc
@@ -63,11 +63,12 @@ func AddProduct(c *gin.Context) {
 
 	db.Create(&product)
 	//Insert Picture
-	if Product.ImageURL != "" {
-		db.Create(&models.ProductImage{
+	for _, image := range Product.ImageURL {
+		productImage := models.ProductImage{
 			ProductID: product.ID,
-			ImageURL:  Product.ImageURL,
-		})
+			ImageURL:  image,
+		}
+		db.Create(&productImage)
 	}
 
 	c.JSON(http.StatusOK, models.NewHttpSuccess("Product added successfully"))
@@ -151,14 +152,17 @@ func GetProductsByCategory(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	category := c.Param("category")
 
-	//get Category ID
-	var categoryModel models.Category
-	db.Joins("Product").Joins("Category").Where("name = ?", category).First(&categoryModel)
-	if categoryModel.ID == 0 {
-		c.JSON(http.StatusBadRequest, models.NewHttpError("Category not found"))
-		return
+	var categoryID models.Category
+	db.Where("name = ?", category).First(&categoryID)
+
+	var products []models.Product
+	db.Joins("Category").Where("category_id = ?", categoryID.ID).Find(&products)
+	for i := range products {
+		var images []models.ProductImage
+		db.Find(&images, "product_id = ?", products[i].ID)
+		products[i].ProductImages = images
 	}
-	products := categoryModel.Products
+
 	c.JSON(http.StatusOK, products)
 }
 
