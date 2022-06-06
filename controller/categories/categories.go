@@ -1,6 +1,7 @@
 package categories
 
 import (
+	"api-store/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -16,9 +17,20 @@ type CategoryJSON struct {
 
 func GetAllCategories(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
-	var categories []CategoryJSON
+	var categories []models.Category
 	db.Find(&categories)
-	c.JSON(http.StatusOK, categories)
+
+	var categoriesJSON []CategoryJSON
+	for _, category := range categories {
+		categoriesJSON = append(categoriesJSON, CategoryJSON{
+			ID:          category.ID,
+			Name:        category.Name,
+			Description: category.Description,
+			ImageURL:    category.Image_url,
+		})
+	}
+
+	c.JSON(http.StatusOK, categoriesJSON)
 }
 
 func CategoryRoute(r *gin.RouterGroup) {

@@ -55,6 +55,8 @@ func CreateSlug(text string) string {
 	slug = strings.Replace(slug, ".", "", -1)
 	slug = strings.Replace(slug, ",", "", -1)
 	slug = strings.Replace(slug, "!", "", -1)
+	//Set to lowercase
+	slug = strings.ToLower(slug)
 
 	return slug
 }

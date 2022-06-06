@@ -17,6 +17,7 @@ type ProductInput struct {
 	SKU         string   `json:"sku" binding:"required"`
 	Category    string   `json:"category" binding:"required"`
 	ImageURL    []string `json:"image_url"`
+	Slug        string   `json:"slug"`
 }
 
 // ShowAccount godoc
@@ -135,8 +136,23 @@ func GetAllProducts(c *gin.Context) {
 		db.Find(&images, "product_id = ?", products[i].ID)
 		products[i].ProductImages = images
 	}
+	var productsJSON []ProductInput
+	for _, product := range products {
+		var productJSON ProductInput
+		productJSON.Name = product.Name
+		productJSON.Description = product.Description
+		productJSON.Price = product.Price
+		productJSON.SKU = product.SKU
+		productJSON.Category = product.Category.Name
+		productJSON.Slug = product.Slug
+		productJSON.ImageURL = []string{}
+		for _, image := range product.ProductImages {
+			productJSON.ImageURL = append(productJSON.ImageURL, image.ImageURL)
+		}
+		productsJSON = append(productsJSON, productJSON)
+	}
 
-	c.JSON(http.StatusOK, products)
+	c.JSON(http.StatusOK, productsJSON)
 }
 
 // ShowAccount godoc
