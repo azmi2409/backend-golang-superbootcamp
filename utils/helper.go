@@ -4,6 +4,7 @@ import (
 	"net/mail"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -44,4 +45,16 @@ func CheckImageExtension(fileName string) bool {
 		}
 	}
 	return false
+}
+
+func CreateSlug(text string) string {
+	// Replace spaces with dash
+	slug := strings.Replace(text, " ", "-", -1)
+	// Remove all non-word characters
+	slug = strings.Replace(slug, "&", "", -1)
+	slug = strings.Replace(slug, ".", "", -1)
+	slug = strings.Replace(slug, ",", "", -1)
+	slug = strings.Replace(slug, "!", "", -1)
+
+	return slug
 }

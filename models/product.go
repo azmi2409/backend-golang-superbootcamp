@@ -11,7 +11,7 @@ type Product struct {
 	Description string  `json:"description"`
 	SKU         string  `json:"sku"`
 	CategoryID  uint    `json:"category_id"`
-	//Slug        string  `json:"slug"`
+	Slug        string  `json:"slug"`
 
 	Category      Category       `gorm:"foreignkey:CategoryID"`
 	ProductImages []ProductImage `gorm:"foreignkey:ProductID"`

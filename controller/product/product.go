@@ -3,6 +3,7 @@ package product
 import (
 	"api-store/middleware/superadmin"
 	"api-store/models"
+	"api-store/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -59,6 +60,7 @@ func AddProduct(c *gin.Context) {
 		Price:       Product.Price,
 		SKU:         Product.SKU,
 		CategoryID:  category.ID,
+		Slug:        utils.CreateSlug(Product.Name),
 	}
 
 	db.Create(&product)
@@ -71,7 +73,7 @@ func AddProduct(c *gin.Context) {
 		db.Create(&productImage)
 	}
 
-	c.JSON(http.StatusOK, models.NewHttpSuccess("Product added successfully"))
+	c.JSON(http.StatusCreated, models.NewHttpSuccess("Product added successfully"))
 
 }
 
