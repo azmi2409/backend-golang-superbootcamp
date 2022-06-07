@@ -250,10 +250,38 @@ func SearchProduct(c *gin.Context) {
 	c.JSON(http.StatusOK, products)
 }
 
+func GetProductBySlug(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	slug := c.Param("slug")
+	var product models.Product
+	db.Joins("Category").Where("slug = ?", slug).First(&product)
+	if product.ID == 0 {
+		c.JSON(http.StatusBadRequest, models.NewHttpError("Product not found"))
+		return
+	}
+	var images []models.ProductImage
+	db.Find(&images, "product_id = ?", product.ID)
+	product.ProductImages = images
+
+	var productJSON ProductInput
+	productJSON.Name = product.Name
+	productJSON.Description = product.Description
+	productJSON.Price = product.Price
+	productJSON.SKU = product.SKU
+	productJSON.Category = product.Category.Name
+	productJSON.Slug = product.Slug
+	productJSON.ImageURL = []string{}
+	for _, image := range product.ProductImages {
+		productJSON.ImageURL = append(productJSON.ImageURL, image.ImageURL)
+	}
+
+	c.JSON(http.StatusOK, productJSON)
+}
+
 func ProductRoutes(r *gin.RouterGroup) {
 
 	r.GET("/", GetAllProducts)
-	r.GET("/:id", GetProductByID)
+	r.GET("/:slug", GetProductBySlug)
 	r.GET("/category/:category", GetProductsByCategory)
 	r.GET("/search/:query", SearchProduct)
 
