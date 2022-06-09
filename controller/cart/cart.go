@@ -17,6 +17,7 @@ type CartInput struct {
 }
 
 type CartItemOutput struct {
+	ID       uint    `json:"id"`
 	SKU      string  `json:"sku"`
 	Name     string  `json:"name"`
 	Image    string  `json:"image"`
@@ -99,6 +100,7 @@ func ViewCart(c *gin.Context) {
 	var cartItemsOutput []CartItemOutput
 	for _, cartItem := range cartItems {
 		cartItemOutput := CartItemOutput{
+			ID:       cartItem.ID,
 			SKU:      cartItem.Product.SKU,
 			Name:     cartItem.Product.Name,
 			Quantity: cartItem.Quantity,
