@@ -12,12 +12,12 @@ import (
 )
 
 type CartInput struct {
-	ProductID uint `json:"product_id" binding:"required"`
-	Quantity  int  `json:"quantity" binding:"required"`
+	SKU      string `json:"sku" binding:"required"`
+	Quantity int    `json:"quantity" binding:"required"`
 }
 
 type CartItemOutput struct {
-	ProductID   uint   `json:"product_id"`
+	SKU         string `json:"sku"`
 	ProductName string `json:"product_name"`
 	Quantity    int    `json:"quantity"`
 }
@@ -32,7 +32,7 @@ func AddtoCart(c *gin.Context) {
 
 	//Check if product exist
 	var product models.Product
-	db.Where("id = ?", cart.ProductID).First(&product)
+	db.Where("sku = ?", cart.SKU).First(&product)
 	if product.ID == 0 {
 		c.JSON(http.StatusBadRequest, models.NewHttpError("Product not found"))
 		return
@@ -56,7 +56,7 @@ func AddtoCart(c *gin.Context) {
 	//input to cart_items
 	var cartItem models.CartItem
 	cartItem.CartID = cartDB.ID
-	cartItem.ProductID = cart.ProductID
+	cartItem.ProductID = product.ID
 	cartItem.Quantity = cart.Quantity
 	cartItem.CreatedAt = time.Now()
 	db.Create(&cartItem)
@@ -90,7 +90,7 @@ func ViewCart(c *gin.Context) {
 	var cartItemsOutput []CartItemOutput
 	for _, cartItem := range cartItems {
 		cartItemOutput := CartItemOutput{
-			ProductID:   cartItem.ProductID,
+			SKU:         cartItem.Product.SKU,
 			ProductName: cartItem.Product.Name,
 			Quantity:    cartItem.Quantity,
 		}
