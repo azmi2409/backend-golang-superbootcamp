@@ -17,9 +17,11 @@ type CartInput struct {
 }
 
 type CartItemOutput struct {
-	SKU         string `json:"sku"`
-	ProductName string `json:"product_name"`
-	Quantity    int    `json:"quantity"`
+	SKU      string  `json:"sku"`
+	Name     string  `json:"name"`
+	Image    string  `json:"mage"`
+	Quantity int     `json:"quantity"`
+	Price    float64 `json:"price"`
 }
 
 func AddtoCart(c *gin.Context) {
@@ -97,10 +99,16 @@ func ViewCart(c *gin.Context) {
 	var cartItemsOutput []CartItemOutput
 	for _, cartItem := range cartItems {
 		cartItemOutput := CartItemOutput{
-			SKU:         cartItem.Product.SKU,
-			ProductName: cartItem.Product.Name,
-			Quantity:    cartItem.Quantity,
+			SKU:      cartItem.Product.SKU,
+			Name:     cartItem.Product.Name,
+			Quantity: cartItem.Quantity,
+			Price:    cartItem.Product.Price,
 		}
+
+		var Image models.ProductImage
+		db.Where("product_id = ?", cartItem.Product.ID).First(&Image)
+		cartItemOutput.Image = Image.ImageURL
+
 		cartItemsOutput = append(cartItemsOutput, cartItemOutput)
 	}
 
