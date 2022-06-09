@@ -19,7 +19,7 @@ type CartInput struct {
 type CartItemOutput struct {
 	SKU      string  `json:"sku"`
 	Name     string  `json:"name"`
-	Image    string  `json:"mage"`
+	Image    string  `json:"image"`
 	Quantity int     `json:"quantity"`
 	Price    float64 `json:"price"`
 }
