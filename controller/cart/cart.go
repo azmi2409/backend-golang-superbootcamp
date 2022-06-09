@@ -153,4 +153,5 @@ func DeleteCartItem(c *gin.Context) {
 func CartRoutes(r *gin.RouterGroup) {
 	r.POST("/", middleware.CheckToken, AddtoCart)
 	r.GET("/", middleware.CheckToken, ViewCart)
+	r.DELETE("/:id", middleware.CheckToken, DeleteCartItem)
 }
