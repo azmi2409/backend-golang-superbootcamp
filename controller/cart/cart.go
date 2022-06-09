@@ -117,6 +117,39 @@ func ViewCart(c *gin.Context) {
 	c.JSON(http.StatusOK, cartItemsOutput)
 }
 
+func DeleteCartItem(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	itemsID := c.Param("id")
+	tokenString := token.ExtractToken(c)
+	id := token.ParseTokenID(tokenString)
+	if id == 0 {
+		c.JSON(http.StatusUnauthorized, models.NewHttpError("Unauthorized"))
+		return
+	}
+	//Check if itemsID match user_id
+	var cartDB models.Cart
+	db.Where("user_id = ?", id).First(&cartDB)
+	if cartDB.ID == 0 {
+		c.JSON(http.StatusUnauthorized, models.NewHttpError("Unauthorized"))
+		return
+	}
+	var cartItem models.CartItem
+	db.Where("id = ?", itemsID).First(&cartItem)
+	if cartItem.ID == 0 {
+		c.JSON(http.StatusBadRequest, models.NewHttpError("Cart item not found"))
+		return
+	}
+	if cartItem.CartID != cartDB.ID {
+		c.JSON(http.StatusUnauthorized, models.NewHttpError("Unauthorized"))
+		return
+	}
+	db.Delete(&cartItem)
+	cartDB.Total -= 1
+	db.Save(&cartDB)
+	c.JSON(http.StatusOK, models.NewHttpSuccess("Cart item deleted successfully"))
+
+}
+
 func CartRoutes(r *gin.RouterGroup) {
 	r.POST("/", middleware.CheckToken, AddtoCart)
 	r.GET("/", middleware.CheckToken, ViewCart)
