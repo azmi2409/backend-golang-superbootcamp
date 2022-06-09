@@ -35,6 +35,8 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowAllOrigins = true
+	corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"}
+	corsConfig.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
 
 	// To be able to send tokens to the server.
 	corsConfig.AllowCredentials = true
