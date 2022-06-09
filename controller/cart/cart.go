@@ -53,14 +53,21 @@ func AddtoCart(c *gin.Context) {
 		db.Create(&cartDB)
 	}
 
-	//input to cart_items
+	//Check if product exist in cart
 	var cartItem models.CartItem
-	cartItem.CartID = cartDB.ID
-	cartItem.ProductID = product.ID
-	cartItem.Quantity = cart.Quantity
-	cartItem.CreatedAt = time.Now()
-	db.Create(&cartItem)
-
+	db.Where("cart_id = ? AND product_id = ?", cartDB.ID, product.ID).First(&cartItem)
+	if cartItem.ID == 0 {
+		//input to cart_items
+		var cartItem models.CartItem
+		cartItem.CartID = cartDB.ID
+		cartItem.ProductID = product.ID
+		cartItem.Quantity = cart.Quantity
+		cartItem.CreatedAt = time.Now()
+		db.Create(&cartItem)
+	} else {
+		cartItem.Quantity = cartItem.Quantity + cart.Quantity
+		db.Save(&cartItem)
+	}
 	cartDB.Total += 1
 	db.Save(&cartDB)
 
