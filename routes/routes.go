@@ -4,6 +4,7 @@ import (
 	"api-store/controller/admin"
 	"api-store/controller/cart"
 	"api-store/controller/categories"
+	"api-store/controller/order"
 	"api-store/controller/product"
 	"api-store/controller/user"
 
@@ -66,6 +67,7 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	productRoutes := api.Group("/product")
 	cartRoutes := api.Group("/cart")
 	categoryRoutes := api.Group("/category")
+	orderRoutes := api.Group("/order")
 	//	orderRoutes := api.Group("/order")
 	//	checkoutRoutes := api.Group("/checkout")
 
@@ -76,6 +78,7 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	product.ProductRoutes(productRoutes)
 	cart.CartRoutes(cartRoutes)
 	categories.CategoryRoute(categoryRoutes)
+	order.OrderRoutes(orderRoutes)
 
 	return r
 }
