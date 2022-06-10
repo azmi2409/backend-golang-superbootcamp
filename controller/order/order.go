@@ -32,6 +32,11 @@ func CreateOrder(c *gin.Context) {
 	var items []models.CartItem
 	db.Joins("Product").Where("cart_id = ?", cart.ID).Find(&items)
 
+	if len(items) == 0 {
+		c.JSON(http.StatusBadRequest, models.NewHttpError("Cart is empty"))
+		return
+	}
+
 	cart.CartItem = items
 
 	//Calculate total
