@@ -8,7 +8,7 @@ type OrderItem struct {
 	gorm.Model
 	OrderID   uint `json:"order_id"`
 	ProductID uint `json:"product_id"`
-	Quantity  uint `json:"quantity"`
+	Quantity  int  `json:"quantity"`
 
 	Product Product `gorm:"foreignkey:ProductID"`
 }

@@ -4,7 +4,9 @@ import (
 	"net/mail"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -59,4 +61,9 @@ func CreateSlug(text string) string {
 	slug = strings.ToLower(slug)
 
 	return slug
+}
+
+func CreateInvoiceNumber(userid int) string {
+	time := time.Now()
+	return "INV" + time.Format("20060102150405") + "-" + strconv.Itoa(userid)
 }
